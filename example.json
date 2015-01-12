@@ -1,0 +1,42 @@
+{
+   "format": [
+       0,
+       0,
+       1
+   ],
+   "connection": {
+       "serial": 1694,
+       "pipeline_index": 50,
+       "pipelined": false,
+       "client": {
+           "address": "172.16.10.100",
+           "port": 64390
+       }
+   },
+   "response": {
+       "status": 200,
+       "size": 500,
+       "bodySize": 303
+   },
+   "cycle": {
+       "when": 1421044210613,
+       "nginx": {
+           "pid": 17750,
+           "hostname": "kal"
+       },
+       "syslog": {
+           "message_length": 780
+       }
+   },
+   "request": {
+       "host": "ci.lab.meschbach.com",
+       "scheme": "http",
+       "method": "POST",
+       "uri": "/view/Epilog/ajaxBuildQueue",
+       "protocol": "HTTP/1.1",
+       "processsed-uri": "/view/Epilog/ajaxBuildQueue",
+       "http_referer": "http://ci.lab.meschbach.com/view/Epilog/",
+       "http_user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:34.0) Gecko/20100101 Firefox/34.0",
+       "length": 705
+   }
+}
