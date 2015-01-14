@@ -184,7 +184,7 @@ function start_service(){
 		}
 	
 		ingest( message.msg, ingress_processing );
-	}).listen( port, function(){
+	}, { address: options.iface }).listen( port, function(){
 		console.log("Started on ", port);
 	});
 }
