@@ -60,15 +60,7 @@ access_log syslog:server=syslog-couch-bridge:9405 mee_json;
 /***************************************
  * Command line argument parsing 
  **************************************/
-var options =
-	(function(){
-		return require("yargs")
-			.default( "port", process.env["PORT"] || 9405 )
-			.default( "couch-url", process.env["COUCH_URL"] || "http://localhost:5984" )
-			.default( "couch-db", process.env[ "COUCH_DB" ] || "development-monitor-http" )
-			.alias( "v", "verbose" )
-			.argv;
-	})();
+var options = require( __dirname + "/options.js" ).standard().argv;
 if( options.verbose ){
 	console.log( "Verbose output enabled" );
 }
@@ -177,21 +169,27 @@ function ingest( rawJson, ingress_processing ){
 /***************************************
  * Service Syslog Edge 
  **************************************/
-var port = options.port;
-var syslogd = require( "syslogd" );
-syslogd( function( message ){
-	function ingress_processing( record ){
-		var incomingLength = message.size;
-		record.cycle.syslog = {
-			message_length: incomingLength
-		};
-		// clean time
-		record.cycle.when = record.cycle.when * 1000;
-		return record;
-	}
+function start_service(){
+	var port = options.port;
+	var syslogd = require( "syslogd" );
+	syslogd( function( message ){
+		function ingress_processing( record ){
+			var incomingLength = message.size;
+			record.cycle.syslog = {
+				message_length: incomingLength
+			};
+			// clean time
+			record.cycle.when = record.cycle.when * 1000;
+			return record;
+		}
+	
+		ingest( message.msg, ingress_processing );
+	}).listen( port, function(){
+		console.log("Started on ", port);
+	});
+}
 
-	ingest( message.msg, ingress_processing );
-}).listen( port, function(){
-	console.log("Started on ", port);
-});
-
+/***************************************
+ * Main entry point
+ **************************************/
+start_service();
