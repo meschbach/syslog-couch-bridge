@@ -18,8 +18,7 @@
  */
 var yargs = require( "yargs" );
 
-function standard_options(){
-	return yargs.options({
+var standardOptions = {
 		iface: { alias: "i", default: process.env["IFACE"], describe: "INET interface to bind to, defaults to all" },
 		port:	{ alias: "p", default: process.env["PORT"] || 9405, describe: "UDP/IP port to bind to" },
 		"couch-url": { 
@@ -32,8 +31,16 @@ function standard_options(){
 			default: process.env[ "COUCH_DB" ] || "development-monitor-http",
 			describe: "Database to store ingressed messages to"
 		}, 
+		"help" : {
+			alias: "h",
+			describe: "Describes the options"
+		},
 		"verbose" : { alias: "v", describe: "display verbose messages" } 
-		});
+};
+
+function standard_options(){
+	return yargs.options( standardOptions );
 }
 
+exports.names = Object.keys( standardOptions );
 exports.standard = standard_options;

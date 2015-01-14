@@ -17,18 +17,33 @@
  * Configuration of upstart script 
  */
 var pkg = require( __dirname + "/package.json" );
+var opts = require( __dirname + "/options.js" );
+var yargs = require( "yargs" );
 
-var yargs = require( "yargs" ).options({
+/***************************************
+ * Options parsing
+ **************************************/
+//Setup options
+var options = opts.standard().options({
 		"node-home" : { describe: "Location of node to run the application under", default: "/opt/joyent/latest"  },
+		"pid-file" : { describe: "Location of the PID file", default: "/var/run/syslog-couchdb.pid" },
 		"user" : { describe: "User to change to", default: "nobody" },
 		"run-extras" : { describe: "extra options to be passed to start-stop-daemon", default: "" },
-		"run-opts" : { describe: "Additional runtime options for the syslog service", default: "" }
-	})
-	.default( "pid-file", "/var/run/syslog-couchdb.pid" )
-	.default( "pwd", __dirname )
-	.default( "version", pkg.version )
-	;
-var args = yargs.argv;
+		"run-opts" : { describe: "Additional runtime options for the syslog service", default: "" },
+		"working-dir" : { alias: "pwd", describe: "Working directory for the applcation", default: __dirname },
+		"version" : { describe: "Version to install for the upstart script", default: pkg.version }
+	});
+var args = options.argv;
+
+function run_options(){
+	return opts.names.reduce( function( options, optionName ){
+		var value = args[ optionName ]; 
+		if( value ){
+			options = options + " --" + optionName + " \"" + value + "\" ";
+		}
+		return options;
+	}, args[ "run-options" ] );
+}
 
 function generate_template(){
 	var config = {
@@ -36,9 +51,9 @@ function generate_template(){
 			'home': args[ 'node-home' ]
 		},
 		run: {
-			dir:		args.pwd,
+			dir:		args[ 'working-dir' ],
 			extras:	args.extras,
-			opts:		args[ "run-options" ],
+			opts:		run_options,
 			pid: args[ 'pid-file' ],
 			user:		args.user,
 			version: args.version
