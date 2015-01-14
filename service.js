@@ -131,6 +131,20 @@ return {
 })();
 
 /***************************************
+ * UID
+ **************************************/
+function uid_process( message ){
+	if( message.beacon ){
+		var uid = message.beacon;
+		var beacon = {
+			id: uid.id,
+			first: uid.got ? false : true
+		}
+		message.beacon = beacon;
+	}
+}
+
+/***************************************
  * Message Ingest 
  **************************************/
 function ingest( rawJson, ingress_processing ){
@@ -146,6 +160,8 @@ function ingest( rawJson, ingress_processing ){
 	userRemover( msg );
 	refererUser( msg );
 	pipeline_to_boolean( msg );
+	uid_process( msg );
+
 	if( options.verbose ){
 		log_record( msg );
 	}
