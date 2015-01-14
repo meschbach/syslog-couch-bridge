@@ -6,3 +6,5 @@ The current implementation is specifically targeted towards nginx access log pro
 The included test application, `test.js`, will send a message to daemon so
 you may ensure the system works as expected.
 
+## License
+Apache 2, Copyright 2015 Mark Eschbach
