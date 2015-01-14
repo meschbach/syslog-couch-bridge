@@ -31,15 +31,11 @@ var standardOptions = {
 			default: process.env[ "COUCH_DB" ] || "development-monitor-http",
 			describe: "Database to store ingressed messages to"
 		}, 
-		"help" : {
-			alias: "h",
-			describe: "Describes the options"
-		},
 		"verbose" : { alias: "v", describe: "display verbose messages" } 
 };
 
 function standard_options(){
-	return yargs.options( standardOptions );
+	return yargs.options( standardOptions ).help( "help" );
 }
 
 exports.names = Object.keys( standardOptions );

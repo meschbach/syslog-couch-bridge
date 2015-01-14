@@ -68,8 +68,4 @@ function generate_template(){
 	process.stdout.write( result );
 }
 
-if( args.help ){
-	yargs.showHelp();
-}else{
-	generate_template();
-}
+generate_template();
