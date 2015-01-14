@@ -18,32 +18,43 @@
  */
 var pkg = require( __dirname + "/package.json" );
 
-var args = require( "yargs" ).default( "node-home", "/opt/joyent/latest" )
+var yargs = require( "yargs" ).options({
+		"node-home" : { describe: "Location of node to run the application under", default: "/opt/joyent/latest"  },
+		"user" : { describe: "User to change to", default: "nobody" },
+		"run-extras" : { describe: "extra options to be passed to start-stop-daemon", default: "" },
+		"run-opts" : { describe: "Additional runtime options for the syslog service", default: "" }
+	})
 	.default( "pid-file", "/var/run/syslog-couchdb.pid" )
 	.default( "pwd", __dirname )
-	.default( "user", "nobody" )
 	.default( "version", pkg.version )
-	.default( "run-extras", "" )
-	.default( "run-options", "" )
-	.argv;
+	;
+var args = yargs.argv;
 
-var config = {
-	node: {
-		'home': args[ 'node-home' ]
-	},
-	run: {
-		dir:		args.pwd,
-		extras:	args.extras,
-		opts:		args[ "run-options" ],
-		pid: args[ 'pid-file' ],
-		user:		args.user,
-		version: args.version
-	}
-};
+function generate_template(){
+	var config = {
+		node: {
+			'home': args[ 'node-home' ]
+		},
+		run: {
+			dir:		args.pwd,
+			extras:	args.extras,
+			opts:		args[ "run-options" ],
+			pid: args[ 'pid-file' ],
+			user:		args.user,
+			version: args.version
+		}
+	};
 
-var fs = require( "fs" );
-var template = fs.readFileSync( "upstart.conf.mustache" );
+	var fs = require( "fs" );
+	var template = fs.readFileSync( "upstart.conf.mustache" );
 
-var mustache = require( "mustache" );
-var result = mustache.render( template.toString(), config );
-process.stdout.write( result );
+	var mustache = require( "mustache" );
+	var result = mustache.render( template.toString(), config );
+	process.stdout.write( result );
+}
+
+if( args.help ){
+	yargs.showHelp();
+}else{
+	generate_template();
+}

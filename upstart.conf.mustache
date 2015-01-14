@@ -20,5 +20,5 @@ stop on started shutdown
 
 script
   export PATH={{&node.home}}/bin:$PATH
-  exec start-stop-daemon --chuid {{&run.user}} --chdir {{&run.dir}} --make-pidfile --start --exec {{&node.home}}/bin/node --pidfile {{&run.pid}} {{&run.extras}} -- {{&run.opts}}
+  exec start-stop-daemon --chuid {{&run.user}} --chdir {{&run.dir}} --make-pidfile --start --exec {{&node.home}}/bin/node --pidfile {{&run.pid}} {{&run.extras}} -- {{&run.dir}}/service.js {{&run.opts}}
 end script
