@@ -60,15 +60,7 @@ access_log syslog:server=syslog-couch-bridge:9405 mee_json;
 /***************************************
  * Command line argument parsing 
  **************************************/
-var options =
-	(function(){
-		return require("yargs")
-			.default( "port", process.env["PORT"] || 9405 )
-			.default( "couch-url", process.env["COUCH_URL"] || "http://localhost:5984" )
-			.default( "couch-db", process.env[ "COUCH_DB" ] || "development-monitor-http" )
-			.alias( "v", "verbose" )
-			.argv;
-	})();
+var options = require( __dirname + "/options.js" ).standard().argv;
 if( options.verbose ){
 	console.log( "Verbose output enabled" );
 }
